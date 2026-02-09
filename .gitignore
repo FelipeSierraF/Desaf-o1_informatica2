@@ -1,5 +1,6 @@
 # Build
 build/
+datasetDesarrollo
 build-*/
 
 # Qt Creator
