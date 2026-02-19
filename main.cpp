@@ -1,10 +1,13 @@
+#include "auxiliares.h"
+#include "crypto.h"
+#include "detectarydescomprimir.h"
 #include "io.h"
 #include <cstring>
 #include <iostream>
 #include <windows.h>
 
-
 using namespace std;
+
 
 int main()
 {
@@ -15,34 +18,35 @@ int main()
     GetCurrentDirectoryA(512, cwd);
     cout << "CWD = " << cwd << endl;
 
-    char nombre[256];
-    char rutaCompleta[512];
-    unsigned char* buffer = nullptr; //Contenedor donde guardaremos el archivo leido en binarios
+    unsigned char* buffer = nullptr; //Arreglo donde guardaremos el archivo leido en binarios
+    unsigned char* bufferDes = nullptr;
+    unsigned char* bufferPista = nullptr;
     int tam = 0;
+    int tamPis = 0;
+    bool encontrado = false;
+
+    cout << "=== PROGRAMA DE LECTURA DE ARCHIVOS ===" << endl;
 
     while(true){
 
-        cout << "Ingrese el nombre del archivo: ";
-        cin.getline(nombre, 256);
+        int num = pedirNumero();
 
-        if (strcmp(nombre, "salir") == 0) {
-            break;
-        }
+        string rutaBase = "C:\\Users\\felip\\Documents\\Proyectos resueltos\\Desafio1\\datasetDesarrollo\\";
 
-        sprintf(
-            rutaCompleta,
-            "C:\\Users\\felip\\Documents\\Proyectos resueltos\\Desafio1\\datasetDesarrollo\\%s",
-            nombre
-        );
-
-
+        string rutaCompleta = rutaBase + "Encriptado" + to_string(num) + ".txt";
+        string rutaPista = rutaBase + "pista" + to_string(num) + ".txt";
         if(leerArchivoBinario(rutaCompleta, buffer, tam)){
-            cout << "Archivo leído correctamente (" << tam << " bytes)\n";
-
-            delete[] buffer;
+            for (size_t n = 1; n < 8 && !encontrado; n++){
+                for(size_t k = 0; k <= 255 && !encontrado; k ++){
+                    bufferDes = bufferDesencriptado(buffer, tam, n, k);
+                    delete[] bufferDes;
+                    bufferDes = nullptr;
+                }
+            }
         }else{
-            cout << "Fallo al leer el archivo " << endl;
+            cout << "Fallo al leer el archivo Encriptado " << endl;
         }
     }
+    delete[] buffer;
 
 }

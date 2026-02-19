@@ -1,6 +1,5 @@
 # Build
 build/
-datasetDesarrollo
 build-*/
 
 # Qt Creator
@@ -23,6 +22,8 @@ Makefile
 *.exe
 *.out
 *.app
+datasetDesarrollo/
+
 
 # OS
 .DS_Store

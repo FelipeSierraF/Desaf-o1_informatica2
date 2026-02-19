@@ -6,13 +6,13 @@
 
 //Funcion que recibe los parametros de nombre, buffer y tam
 /*
-    nombre: contiene la ruta y el nombre del archivo que buscamos
+    ruta: contiene la ruta y el ruta del archivo que buscamos
     buffer: contiene el archivo leido en binario
     tam: Variable con la que medimos el tamaño del archivo
 */
-bool leerArchivoBinario(const char* nombre, unsigned char*& buffer, int& tam) {
+bool leerArchivoBinario(std::string ruta, unsigned char*& buffer, int& tam) {
     // Abrir el archivo en modo binario
-    std::ifstream archivo(nombre, std::ios::binary | std::ios::ate);
+    std::ifstream archivo(ruta, std::ios::binary | std::ios::ate);
 
     if (!archivo.is_open()) {
         return false;
@@ -21,6 +21,12 @@ bool leerArchivoBinario(const char* nombre, unsigned char*& buffer, int& tam) {
     // Obtener el tamaño del archivo
     tam = archivo.tellg();
     archivo.seekg(0, std::ios::beg);
+
+    //verificar lectura del tamaño
+    if (tam <= 0) {
+        archivo.close();
+        return false;
+    }
 
     // Reservar memoria para el buffer
     buffer = new unsigned char[tam];
