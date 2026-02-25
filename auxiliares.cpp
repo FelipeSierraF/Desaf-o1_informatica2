@@ -1,12 +1,14 @@
 #include "auxiliares.h"
 #include <cctype>
 #include <iostream>
+#include <cstdio>
+#include <cstring>
 
 int pedirNumero() {
     char c;
 
     while (true) {
-        std::cout << "Ingresa un numero (0-9): ";
+        std::cout << "Ingresa un numero o el 0 para finalizar el programa: ";
         std::cin >> c;
 
         // Validar que sea un dígito
@@ -20,5 +22,16 @@ int pedirNumero() {
             std::cin.ignore(10000, '\n');
         }
     }
+}
+
+void construirRutas(int num, char* rutaCompleta, char* rutaPista){
+    const char* rutaBase =
+        "C:\\Users\\felip\\Documents\\Proyectos resueltos\\Desafio1\\datasetDesarrollo\\";
+
+    // Construir ruta EncriptadoX.txt
+    sprintf(rutaCompleta, "%sEncriptado%d.txt", rutaBase, num);
+
+    // Construir ruta pistaX.txt
+    sprintf(rutaPista, "%spista%d.txt", rutaBase, num);
 }
 

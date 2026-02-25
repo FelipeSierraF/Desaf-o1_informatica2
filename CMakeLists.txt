@@ -11,7 +11,10 @@ add_executable(Desafio1 main.cpp
     io.h io.cpp
     crypto.h crypto.cpp
     auxiliares.h auxiliares.cpp
-    detectarydescomprimir.h detectarydescomprimir.cpp)
+    rle.h rle.cpp
+    LZ78.h LZ78.cpp
+    contienepista.h contienepista.cpp
+)
 
 include(GNUInstallDirs)
 install(TARGETS Desafio1

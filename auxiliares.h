@@ -3,5 +3,6 @@
 
 
 int pedirNumero();
+void construirRutas(int num, char* rutaCompleta, char* rutaPista);
 
 #endif // AUXILIARES_H

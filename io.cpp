@@ -1,6 +1,8 @@
 #include "io.h"
 #include <iostream>
 #include <fstream>
+#include <cstdio>
+
 
 
 
@@ -10,39 +12,78 @@
     buffer: contiene el archivo leido en binario
     tam: Variable con la que medimos el tamaño del archivo
 */
-bool leerArchivoBinario(std::string ruta, unsigned char*& buffer, int& tam) {
-    // Abrir el archivo en modo binario
-    std::ifstream archivo(ruta, std::ios::binary | std::ios::ate);
+bool leerArchivoBinario(const char* ruta, unsigned char*& buffer, int& tam){
+    FILE* archivo = fopen(ruta, "rb");
+    if (!archivo)
+        return false;
 
-    if (!archivo.is_open()) {
+    // Obtener tamaño
+    fseek(archivo, 0, SEEK_END);
+    long size = ftell(archivo);
+    fseek(archivo, 0, SEEK_SET);
+
+    if (size <= 0)
+    {
+        fclose(archivo);
         return false;
     }
 
-    // Obtener el tamaño del archivo
-    tam = archivo.tellg();
-    archivo.seekg(0, std::ios::beg);
-
-    //verificar lectura del tamaño
-    if (tam <= 0) {
-        archivo.close();
+    buffer = new unsigned char[size];
+    if (!buffer)
+    {
+        fclose(archivo);
         return false;
     }
 
-    // Reservar memoria para el buffer
-    buffer = new unsigned char[tam];
+    size_t leidos = fread(buffer, 1, size, archivo);
+    fclose(archivo);
 
-    // Leer el archivo completo
-    archivo.read(reinterpret_cast<char*>(buffer), tam);
-
-    // Verificar si la lectura fue exitosa
-    if (!archivo) {
+    if ((long)leidos != size)
+    {
         delete[] buffer;
         buffer = nullptr;
-        tam = 0;
-        archivo.close();
         return false;
     }
 
-    archivo.close();
+    tam = (int)size;
+    return true;
+}
+
+bool leerPista(const char* ruta, unsigned char*& buffer, int& tam){
+    FILE* archivo = fopen(ruta, "rb");
+    if (!archivo)
+        return false;
+
+    // Obtener tamaño del archivo
+    fseek(archivo, 0, SEEK_END);
+    long size = ftell(archivo);
+    fseek(archivo, 0, SEEK_SET);
+
+    if (size <= 0)
+    {
+        fclose(archivo);
+        return false;
+    }
+
+    // Reservar memoria
+    buffer = new unsigned char[size];
+    if (!buffer)
+    {
+        fclose(archivo);
+        return false;
+    }
+
+    // Leer contenido
+    size_t leidos = fread(buffer, 1, size, archivo);
+    fclose(archivo);
+
+    if ((long)leidos != size)
+    {
+        delete[] buffer;
+        buffer = nullptr;
+        return false;
+    }
+
+    tam = (int)size;
     return true;
 }
